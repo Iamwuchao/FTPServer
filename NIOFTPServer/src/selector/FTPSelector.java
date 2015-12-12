@@ -8,6 +8,10 @@ import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/*
+ * FTP服务器 selector抽象类
+ */
+
 public abstract class FTPSelector implements Runnable{
 	protected Selector selector;
 	protected volatile boolean isClose;

@@ -5,6 +5,9 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.util.Iterator;
 
+/*
+ * 负责接收连接请求
+ */
 public class AcceptSelector extends FTPSelector {
 	private final ProcessSelector processSelector;
 	
