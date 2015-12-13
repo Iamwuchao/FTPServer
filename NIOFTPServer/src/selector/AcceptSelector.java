@@ -1,7 +1,6 @@
 package selector;
 
 import java.io.IOException;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.util.Iterator;
 
@@ -17,29 +16,6 @@ public class AcceptSelector extends FTPSelector {
 		this.processSelector = processSelector;
 	}
 
-	
-	class Work implements Runnable{
-		Iterator it;
-		protected Work(Iterator it){
-			this.it = it;
-		}
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			while(it.hasNext()){
-				SelectionKey key = (SelectionKey) it.next();
-				if(key.isAcceptable()){
-					try {
-						processSelector.register(key.channel(),SelectionKey.OP_READ);
-					} catch (ClosedChannelException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-	}
-	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -63,8 +39,25 @@ public class AcceptSelector extends FTPSelector {
 		thread.start();
 	}
 	
+	/*
+	 * 关闭selector 关闭processSelector
+	 * @see selector.FTPSelector#stop()
+	 */
+	public void stop() throws IOException{
+		processSelector.stop();
+		super.stop();
+	}
+	
+	
+	/*
+	 * 使用线程池处理 ready的Channel
+	 * @see selector.FTPSelector#process(java.util.Iterator)
+	 */
 	protected void process(Iterator it){
-		Work work = new Work(it);
-		threadPool.execute(work);
+		while(it.hasNext())
+		{
+			SelectionKey key = (SelectionKey)it.next(); 
+			
+		}
 	}
 }

@@ -15,33 +15,34 @@ import java.util.concurrent.Executors;
 public abstract class FTPSelector implements Runnable{
 	protected Selector selector;
 	protected volatile boolean isClose;
+	
+	//状态锁 用于控制isClose
 	protected final Object statusLock;
-	protected final Object selectorLock;
-	protected final ExecutorService threadPool;
+	
+	
 	public FTPSelector() throws IOException{
 		selector = Selector.open();
 		statusLock = new Object();
-		selectorLock = new Object();
-		threadPool = Executors.newFixedThreadPool(5);
 		isClose = false;
 	}
 	
 	public void stop() throws IOException
-	{	if(isClose) return;
+	{	
 		synchronized(statusLock){
 			isClose = true;
-		}
-		synchronized(selectorLock){
 			selector.close();
 		}
 	}
 	
-	public boolean register(SelectableChannel channel,int ops) throws ClosedChannelException{
+	public boolean register(SelectableChannel channel,int ops) throws IOException{
 		if(channel == null){
 			throw new NullPointerException();
 		}
-		if(isClose) return false;
-		synchronized(selectorLock){
+		if(channel.isBlocking()){
+			channel.configureBlocking(true);
+		}
+		synchronized(statusLock){
+			if(isClose) return false;
 			if(selector.isOpen())
 			{
 				channel.register(selector, ops);
