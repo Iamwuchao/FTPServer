@@ -1,18 +1,16 @@
 package selector;
 
 import java.io.IOException;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectableChannel;
+import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.Iterator;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /*
  * FTP服务器 selector抽象类
  */
 
-public abstract class FTPSelector implements Runnable{
+public abstract class FTPSelector{
 	protected Selector selector;
 	protected volatile boolean isClose;
 	
@@ -55,5 +53,5 @@ public abstract class FTPSelector implements Runnable{
 		}
 	}
 	
-	protected abstract void process(Iterator it);
+	public abstract Iterator<SelectionKey> select();
 }

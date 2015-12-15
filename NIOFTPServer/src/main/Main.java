@@ -2,15 +2,15 @@ package main;
 
 import java.io.IOException;
 
-import Server.Server;
+import Server.FtpServer;
 
 public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Server server;
+		FtpServer server;
 		try {
-			server = new Server();
+			server = new FtpServer();
 			server.start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
