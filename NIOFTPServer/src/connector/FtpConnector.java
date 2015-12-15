@@ -46,7 +46,11 @@ public class FtpConnector implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		
+		while(!isClose)
+		{
+			Iterator<SelectionKey> it = acceptSelector.select();
+			process(it);
+		}
 	}
 	
 	/*
