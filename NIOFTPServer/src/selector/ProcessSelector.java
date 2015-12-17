@@ -14,8 +14,6 @@ public class ProcessSelector extends FTPSelector{
 		super.stop();
 	}
 
-
-
 	@Override
 	public Iterator<SelectionKey> select() {
 		// TODO Auto-generated method stub

@@ -14,7 +14,7 @@ public class FtpConnector implements Runnable{
 	private final ServerSocketChannel serverCommandChannel;
 	private final AcceptSelector acceptSelector;
 	private final FTPProcess ftpProcess;
-	private volatile boolean isClose;
+	private volatile boolean isClosed;
 	//状态锁 用于控制isClose
 	protected final Object statusLock;
 	
@@ -25,7 +25,7 @@ public class FtpConnector implements Runnable{
 		acceptSelector = new AcceptSelector();
 		acceptSelector.register(serverCommandChannel, SelectionKey.OP_ACCEPT);
 		ftpProcess = new FTPProcess();
-		isClose = false;
+		isClosed = false;
 		statusLock = new Object();
 	}
 	
@@ -46,10 +46,15 @@ public class FtpConnector implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		while(!isClose)
+		while(!isClosed)
 		{
-			Iterator<SelectionKey> it = acceptSelector.select();
-			process(it);
+			synchronized(statusLock){
+				if(!isClosed)
+				{
+					Iterator<SelectionKey> it = acceptSelector.select();
+					process(it);
+				}
+			}
 		}
 	}
 	
