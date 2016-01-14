@@ -1,4 +1,4 @@
-package parse;
+package message;
 
 public class Response {
 

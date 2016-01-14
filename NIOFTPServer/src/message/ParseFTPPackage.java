@@ -1,4 +1,4 @@
-package parse;
+package message;
 
 public class ParseFTPPackage {
 	public static Request parseFtppackege( String requestContent)

@@ -1,16 +1,18 @@
-package security;
+package message;
 
 import java.nio.file.Path;
+
+import security.User;
 
 /*
  * 用于记录用户访问的上下文
  */
-public class FtpContext {
+public class FtpSession {
 	private final Path rootPath;
 	private Path currentPath;
 	private final User user;
 	
-	public FtpContext(Path rootPath,User user)
+	public FtpSession(Path rootPath,User user)
 	{
 		if(rootPath == null)
 		{

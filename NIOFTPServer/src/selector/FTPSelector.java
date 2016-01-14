@@ -12,24 +12,24 @@ import java.util.Iterator;
 
 public abstract class FTPSelector{
 	protected Selector selector;
-	protected volatile boolean isClose;
+	//protected volatile boolean isClose;
 	
 	//状态锁 用于控制isClose
-	protected final Object statusLock;
+	//protected final Object statusLock;
 	
 	
 	public FTPSelector() throws IOException{
 		selector = Selector.open();
-		statusLock = new Object();
-		isClose = false;
+	//	statusLock = new Object();
+	//	isClose = false;
 	}
 	
 	public void stop() throws IOException
 	{	
-		synchronized(statusLock){
-			isClose = true;
+		//synchronized(statusLock){
+			//isClose = true;
 			selector.close();
-		}
+	//	}
 	}
 	
 	public boolean register(SelectableChannel channel,int ops) throws IOException{
@@ -37,9 +37,19 @@ public abstract class FTPSelector{
 			throw new NullPointerException();
 		}
 		if(channel.isBlocking()){
-			channel.configureBlocking(true);
+			channel.configureBlocking(false);
 		}
-		synchronized(statusLock){
+		if(selector.isOpen())
+		{
+			channel.register(selector, ops);
+			System.out.println("keys "+selector.keys().size());
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		/*synchronized(statusLock){
 			if(isClose) return false;
 			if(selector.isOpen())
 			{
@@ -50,7 +60,12 @@ public abstract class FTPSelector{
 			{
 				return false;
 			}
-		}
+		}*/
+	}
+	
+	public int getSize(){
+		int n = selector.keys().size();
+		return n;
 	}
 	
 	public abstract Iterator<SelectionKey> select();

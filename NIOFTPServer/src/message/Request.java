@@ -1,4 +1,4 @@
-package parse;
+package message;
 
 public class Request {
 	private final String command;
@@ -12,7 +12,7 @@ public class Request {
 	public String getRequestSource() {
 		return requestSource;
 	}
-
+	
 	public String getCommand() {
 		return command;
 	}	

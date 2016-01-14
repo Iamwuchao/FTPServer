@@ -22,11 +22,13 @@ public class FtpConnector implements Runnable{
 	{
 		serverCommandChannel =  ServerSocketChannel.open();
 		serverCommandChannel.bind(new InetSocketAddress(21));
+		serverCommandChannel.configureBlocking(false);
 		acceptSelector = new AcceptSelector();
 		acceptSelector.register(serverCommandChannel, SelectionKey.OP_ACCEPT);
 		ftpProcess = new FTPProcess();
 		isClosed = false;
 		statusLock = new Object();
+		System.out.println("FTP Connector init success");
 	}
 	
 	public static FtpConnector open() throws IOException{
@@ -36,11 +38,15 @@ public class FtpConnector implements Runnable{
 	public void start(){
 		Thread thread = new Thread(this);
 		thread.start();
+		ftpProcess.start();
+		System.out.println("FTP Connector start");
 	}
 	
 	public void stop() throws IOException{
+		isClosed = true;
 		acceptSelector.stop();
 		serverCommandChannel.close();
+		ftpProcess.stop();
 	}
 
 	@Override
@@ -49,10 +55,22 @@ public class FtpConnector implements Runnable{
 		while(!isClosed)
 		{
 			synchronized(statusLock){
+				System.out.println("connector " + acceptSelector.getSize());
 				if(!isClosed)
 				{
 					Iterator<SelectionKey> it = acceptSelector.select();
-					process(it);
+					if(it!=null)
+					{	
+						System.out.println("accept");
+						process(it);
+					}
+				}
+				try {
+				//	System.out.println("process");
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}
@@ -68,7 +86,17 @@ public class FtpConnector implements Runnable{
 			SelectionKey key = it.next(); 
 			if(key.isAcceptable())
 			{
-				ftpProcess.register((SocketChannel) key.channel(),SelectionKey.OP_READ);
+				ServerSocketChannel serverSocket =  (ServerSocketChannel) key.channel();
+				SocketChannel socketChannel=null;
+				try {
+					socketChannel = serverSocket.accept();
+					socketChannel.socket().setSoTimeout(1000);
+					System.out.println(socketChannel.getRemoteAddress().toString());
+					ftpProcess.register(socketChannel,SelectionKey.OP_READ|SelectionKey.OP_WRITE);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}

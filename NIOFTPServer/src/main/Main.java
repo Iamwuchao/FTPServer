@@ -12,6 +12,7 @@ public class Main {
 		try {
 			server = new FtpServer();
 			server.start();
+			System.out.println("FTPServer start");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
