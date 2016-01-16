@@ -55,7 +55,7 @@ public class FtpConnector implements Runnable{
 		while(!isClosed)
 		{
 			synchronized(statusLock){
-				System.out.println("connector " + acceptSelector.getSize());
+			//	System.out.println("connector " + acceptSelector.getSize());
 				if(!isClosed)
 				{
 					Iterator<SelectionKey> it = acceptSelector.select();
@@ -95,9 +95,18 @@ public class FtpConnector implements Runnable{
 					ftpProcess.register(socketChannel,SelectionKey.OP_READ|SelectionKey.OP_WRITE);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
+					if(socketChannel!=null){
+						try {
+							socketChannel.close();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
 					e.printStackTrace();
 				}
 			}
+			it.remove();
 		}
 	}
 }

@@ -11,6 +11,10 @@ public class FtpSession {
 	private final Path rootPath;
 	private Path currentPath;
 	private final User user;
+	private Request request;
+	private Response response;
+	private final Object responseLock = new Object();
+	private final Object requestLock = new Object();
 	
 	public FtpSession(Path rootPath,User user)
 	{
@@ -25,6 +29,34 @@ public class FtpSession {
 		this.rootPath = rootPath;
 		this.currentPath = rootPath;
 		this.user = user;
+	}
+	
+	public Request getRequest(){
+		return this.request;
+	}
+	
+	public void setResponse(Response response){
+		synchronized(responseLock){
+			this.response = response;
+		}
+	}
+	
+	public Response getAndClearResponse(){
+		synchronized(responseLock){
+			Response temresponse = this.response;
+			this.response = null;
+			return temresponse;
+		}
+	}
+	
+	public void setRequest(Request request){
+		synchronized(requestLock){
+			this.request = request;
+		}
+	}
+	
+	public void clearRequest(){
+		this.request = null;
 	}
 	
 	public void setcurrentPath(Path path)
@@ -47,4 +79,7 @@ public class FtpSession {
 		return this.user;
 	}
 	
+	public void close(){
+		
+	}
 }

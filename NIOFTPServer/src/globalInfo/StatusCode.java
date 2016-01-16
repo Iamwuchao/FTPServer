@@ -1,5 +1,7 @@
 package globalInfo;
 
-public enum StatusCode {
-
+public class StatusCode {
+	public static final int SUCCESS = 220;
+	public static final int ERROR = 331;
+	
 }
