@@ -32,7 +32,7 @@ public abstract class FTPSelector{
 	//	}
 	}
 	
-	public boolean register(SelectableChannel channel,int ops) throws IOException{
+	public boolean register(SelectableChannel channel,int ops,Object session) throws IOException{
 		if(channel == null){
 			throw new NullPointerException();
 		}
@@ -41,7 +41,7 @@ public abstract class FTPSelector{
 		}
 		if(selector.isOpen())
 		{
-			channel.register(selector, ops);
+			channel.register(selector, ops,session);
 			System.out.println("keys "+selector.keys().size());
 			return true;
 		}

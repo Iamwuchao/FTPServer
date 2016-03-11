@@ -7,6 +7,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
+import message.FtpSession;
 import process.FTPProcess;
 import selector.AcceptSelector;
 
@@ -24,7 +25,7 @@ public class FtpConnector implements Runnable{
 		serverCommandChannel.bind(new InetSocketAddress(21));
 		serverCommandChannel.configureBlocking(false);
 		acceptSelector = new AcceptSelector();
-		acceptSelector.register(serverCommandChannel, SelectionKey.OP_ACCEPT);
+		acceptSelector.register(serverCommandChannel, SelectionKey.OP_ACCEPT,null);
 		ftpProcess = new FTPProcess();
 		isClosed = false;
 		statusLock = new Object();
@@ -92,7 +93,8 @@ public class FtpConnector implements Runnable{
 					socketChannel = serverSocket.accept();
 					socketChannel.socket().setSoTimeout(1000);
 					System.out.println(socketChannel.getRemoteAddress().toString());
-					ftpProcess.register(socketChannel,SelectionKey.OP_READ|SelectionKey.OP_WRITE);
+					FtpSession session = new FtpSession(null, null);
+					ftpProcess.register(socketChannel,SelectionKey.OP_READ|SelectionKey.OP_WRITE,session);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					if(socketChannel!=null){

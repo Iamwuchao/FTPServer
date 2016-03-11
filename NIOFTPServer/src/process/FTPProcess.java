@@ -122,7 +122,7 @@ public class FTPProcess implements Runnable{
  		}
 	}
 	
-	public boolean register(SocketChannel socketChannel,int ops)
+	public boolean register(SocketChannel socketChannel,int ops,FtpSession session)
 	{
 		if(socketChannel == null) return false;
 		try {
@@ -133,7 +133,7 @@ public class FTPProcess implements Runnable{
 			socketChannel.write(bb);
 			bb.clear();
 			System.out.println("send response");
-			processSelector.register(socketChannel, ops);
+			processSelector.register(socketChannel, ops,session);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
