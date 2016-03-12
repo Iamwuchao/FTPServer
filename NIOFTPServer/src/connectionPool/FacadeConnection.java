@@ -27,11 +27,11 @@ public class FacadeConnection implements Connection{
 		this.pool = pool;
 	}
 	
-	public void destory() throws SQLException{
+	void destory() throws SQLException{
 		if(connection!=null&&!connection.isClosed()){
 			connection.close();
 		}
-		
+		pool = null;
 	}
 	
 	@Override
