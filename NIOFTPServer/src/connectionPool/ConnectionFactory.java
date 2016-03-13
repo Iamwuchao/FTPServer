@@ -3,6 +3,5 @@ package connectionPool;
 import java.sql.Connection;
 
 public interface ConnectionFactory {
-		Connection getConnection();
-		void destory();
+		Connection getConnection(ConnectionPool pool);
 }
