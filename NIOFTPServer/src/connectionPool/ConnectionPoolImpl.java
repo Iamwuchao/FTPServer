@@ -2,6 +2,7 @@ package connectionPool;
 
 import java.sql.Connection;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +30,8 @@ class DelayKey implements Delayed{
 public enum ConnectionPoolImpl implements ConnectionPool{
 	CONNECTIONSPOOL;
 	
-	private DelayQueue<DelayKey> queue;
+	private  DelayQueue<DelayKey> dealyQueue;
+	private  ConcurrentLinkedQueue<Connection> connectionQueue;
 	@Override
 	public Connection getConnection() {
 		// TODO Auto-generated method stub

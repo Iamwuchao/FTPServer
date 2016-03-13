@@ -10,15 +10,15 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Consumer;
 import sun.misc.Unsafe;
-public class MyConcurrentLinkedList<E>  extends AbstractQueue<E>
+class MyConcurrentLinkedList<E>  extends AbstractQueue<E>
 implements Queue<E>, java.io.Serializable {
 
 	private static final long serialVersionUID = 196745693267521676L;
 
-    public static class Node<E> {
+        static class Node<E> {
         volatile E item;
         volatile Node<E> next;
-
+        volatile Node<E> pre;
         /**
          * Constructs a new node.  Uses relaxed write because item can
          * only be seen after publication via casNext.
@@ -121,6 +121,36 @@ implements Queue<E>, java.io.Serializable {
         tail = t;
     }
 
+    public boolean add(Node<E> newNode){
+    	if(newNode == null) return false;
+    	for(Node<E> t=tail,p=t;;){
+    		Node<E> q = p.next;
+    		if(q == null){
+    			if(p.casNext(null, newNode)){
+    				if(p!=t)
+    					casTail(t,newNode);
+    				return true;
+    			}
+    		}
+    		else if(p==q){
+    			p=(t !=(t = tail))?t:head;
+    		}
+    		else
+        		p = (p !=t && t!=(t = tail))?t:q;
+    	}
+    }
+    
+    public boolean remove(Node<E> node){
+    	if(node==null) return false;
+    	final Node<E> p = node;
+    	final E item = node.item;
+    	if(p.casItem(item,null)){
+    		Node<E> next = succ(p);
+    		
+    	}
+    }
+    
+    
     // Have to override just to update the javadoc
 
     /**
