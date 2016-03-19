@@ -6,5 +6,6 @@ public interface ConnectionPool {
 	Connection getConnection();
 	void giveBackConnection(Connection connection);
 	void close();
-	void Init();
+	void start();
+	boolean isClosed();
 }

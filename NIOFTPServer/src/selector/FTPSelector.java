@@ -12,10 +12,6 @@ import java.util.Iterator;
 
 public abstract class FTPSelector{
 	protected Selector selector;
-	//protected volatile boolean isClose;
-	
-	//状态锁 用于控制isClose
-	//protected final Object statusLock;
 	
 	
 	public FTPSelector() throws IOException{

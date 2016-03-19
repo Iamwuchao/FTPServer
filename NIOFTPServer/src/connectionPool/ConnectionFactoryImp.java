@@ -12,8 +12,9 @@ public class ConnectionFactoryImp implements ConnectionFactory{
 		this.password = password;
 		this.userName = userName;
 	}
+	
 	@Override
-	public Connection getConnection(CononectionPool pool) {
+	public Connection getConnection(ConnectionPool pool) {
 		// TODO Auto-generated method stub
 		return null;
 	}
