@@ -8,14 +8,17 @@ import security.User;
  * 用于记录用户访问的上下文
  */
 public class FtpSession {
-	private final Path rootPath;
+	private Path rootPath;
 	private Path currentPath;
-	private final User user;
+	private User user;
 	private Request request;
 	private Response response;
 	private final Object responseLock = new Object();
 	private final Object requestLock = new Object();
-	
+	public FtpSession(){
+		rootPath = null;
+		user = null;
+	}
 	public FtpSession(Path rootPath,User user)
 	{
 		if(rootPath == null)

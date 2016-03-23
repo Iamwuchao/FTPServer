@@ -127,10 +127,11 @@ public class FTPProcess implements Runnable{
 		if(socketChannel == null) return false;
 		try {
 			if(socketChannel.isBlocking()) socketChannel.configureBlocking(false);
-			String response = "220 Service ready for new user";
+			String response = "220 Service ready for new user\n\r";
 			Charset cs  = CharsetFactory.getCharset("ASCII");
 			ByteBuffer bb = cs.encode(response);
 			socketChannel.write(bb);
+			
 			bb.clear();
 			System.out.println("send response");
 			processSelector.register(socketChannel, ops,session);
@@ -146,6 +147,7 @@ public class FTPProcess implements Runnable{
 	{
 		ByteBuffer buffer = ByteBuffer.allocate(1024);
 		Charset cs  = CharsetFactory.getCharset("ASCII");
+		System.out.println("ftp process");
 		while(it.hasNext())
 		{
 			SelectionKey key = it.next();
@@ -154,6 +156,7 @@ public class FTPProcess implements Runnable{
 			//Work word = new Work(channel,context);
 			//threadPool.execute(word);
 			if(key.isReadable()){
+				System.out.println("ftp process read");
 				buffer.flip();
 				SocketChannel channel = (SocketChannel) key.channel();
 				try {
@@ -171,7 +174,7 @@ public class FTPProcess implements Runnable{
 			}
 			else if(key.isWritable())
 			{
-				
+				System.out.println("ftp process write");
 				SocketChannel channel = (SocketChannel) key.channel();
 				String response = "331 Service ready for new user";
 				ByteBuffer bb = cs.encode(response);

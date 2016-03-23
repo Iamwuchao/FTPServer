@@ -92,8 +92,8 @@ public class FtpConnector implements Runnable{
 				try {
 					socketChannel = serverSocket.accept();
 					socketChannel.socket().setSoTimeout(1000);
-					System.out.println(socketChannel.getRemoteAddress().toString());
-					FtpSession session = new FtpSession(null, null);
+					System.out.println("connection client "+socketChannel.getRemoteAddress().toString());
+					FtpSession session = new FtpSession();
 					ftpProcess.register(socketChannel,SelectionKey.OP_READ|SelectionKey.OP_WRITE,session);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
